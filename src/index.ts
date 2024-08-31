@@ -1,28 +1,22 @@
-import { program } from "commander";
-import { NewBranchTask } from "./task/NewBranchTask";
-import { Logger } from "./tools/Logger";
-import { GitClient } from "./api/gitClient";
+import { program } from 'commander';
+import { NewBranchTask } from './task/NewBranchTask';
+import { Logger } from './tools/Logger';
+import { GitClient } from './api/GitClient';
 
 program
-  .name("branch tool")
-  .description("CLI tool to help with branching and committing");
+    .name('branch tool')
+    .description('CLI tool to help with branching and committing');
 
 program
-  .command("new")
-  .description("Start a new branch")
-  .action(async (...args) => {
-    const task = new NewBranchTask(new Logger(), new GitClient());
-    const exitCode = await task.execute();
+    .command('new')
+    .description('Start a new branch')
+    .action(async () => {
+        const exitCode = await new NewBranchTask(
+            new Logger(),
+            new GitClient(),
+        ).execute();
 
-    process.exit(exitCode);
-  });
+        process.exit(exitCode);
+    });
 
 program.parse();
-
-const options = program.opts();
-
-console.dir(options, {
-  depth: null,
-  colors: true,
-  compact: false,
-});
