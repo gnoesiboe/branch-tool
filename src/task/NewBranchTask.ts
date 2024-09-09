@@ -129,10 +129,7 @@ export class NewBranchTask implements Task {
     }> {
         this.logger.logSection('Determine current situation');
 
-        const currentBranch = this.gitClient
-            .resolveCurrentBranch()
-            .trim()
-            .toLowerCase();
+        const currentBranch = this.gitClient.resolveCurrentBranch().trim();
         this.logger.logDefinition('Current branch', currentBranch);
 
         const onDefaultBranch = currentBranch === 'main';
