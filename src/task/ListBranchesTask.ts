@@ -1,11 +1,11 @@
 import { GitClient } from '../api/GitClient';
 import { Logger, TreeItem } from '../tools/Logger';
-import { Task } from './TaskInterface';
+import { TaskInterface } from './TaskInterface';
 import chalk from 'chalk';
 
 const currentSuffix = ' [current]';
 
-export class ListBranchesTask implements Task {
+export class ListBranchesTask implements TaskInterface {
     constructor(
         private readonly logger: Logger,
         private readonly gitClient: GitClient,

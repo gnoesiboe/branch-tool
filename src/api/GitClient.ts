@@ -1,6 +1,8 @@
 import { execSync } from 'child_process';
 import { groupByCallback } from '../utilities/arrayUtilities';
 
+const listBranchesMergedInCurrentCommand = `git branch --merged | egrep -v "(^\\*|master|main)"`;
+
 export class GitClient {
     resolveCurrentBranch(): string {
         return execSync('git branch --show-current').toString();
@@ -8,6 +10,22 @@ export class GitClient {
 
     branchOff(newBranchName: string): void {
         execSync(`git checkout -b ${newBranchName}`);
+    }
+
+    listBranchesMergedInCurrent(): string[] {
+        try {
+            return execSync(listBranchesMergedInCurrentCommand)
+                .toString()
+                .split('\n')
+                .filter((branch) => branch.length > 0)
+                .map((branch) => branch.trim());
+        } catch (error) {
+            return [];
+        }
+    }
+
+    deleteBranch(branchName: string): void {
+        execSync(`git branch -d ${branchName}`);
     }
 
     listBranches(): {

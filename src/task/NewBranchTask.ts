@@ -1,6 +1,6 @@
 import { GitClient } from '../api/GitClient';
 import { Logger } from '../tools/Logger';
-import { Task } from './TaskInterface';
+import { TaskInterface } from './TaskInterface';
 import inquirer from 'inquirer';
 
 type ChangType =
@@ -11,7 +11,7 @@ type ChangType =
     | 'documentation'
     | 'test';
 
-export class NewBranchTask implements Task {
+export class NewBranchTask implements TaskInterface {
     constructor(
         private readonly logger: Logger,
         private readonly gitClient: GitClient,

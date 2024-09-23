@@ -28,7 +28,7 @@ export class Logger {
             nextIsLastAndArray: boolean,
         ): string => {
             if (index === 0) {
-                return '┌';
+                return listLength === 1 ? '-' : '┌';
             }
 
             const isLast = index === listLength - 1;
@@ -64,6 +64,22 @@ export class Logger {
                 item,
             );
         });
+    }
+
+    logWarning(message: string): void {
+        console.warn(chalk.yellow('⚠️', message));
+    }
+
+    logError(message: string): void {
+        const messageWithPrefix = `! ${message}`;
+
+        console.error(
+            chalk.red('┌' + '─'.repeat(messageWithPrefix.length + 2) + '┐'),
+        );
+        console.error(chalk.red('│ ' + messageWithPrefix + ' │'));
+        console.error(
+            chalk.red('└' + '─'.repeat(messageWithPrefix.length + 2) + '┘'),
+        );
     }
 
     logLineBreak(): void {
