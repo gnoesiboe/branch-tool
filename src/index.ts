@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from 'commander';
 import { NewBranchTask } from './task/NewBranchTask';
 import { Logger } from './tools/Logger';
