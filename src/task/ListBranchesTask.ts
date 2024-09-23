@@ -15,7 +15,7 @@ export class ListBranchesTask implements TaskInterface {
         current: string,
         stacks: Record<string, string[]>,
     ): void {
-        this.logger.logHeader('All branches');
+        this.logger.logHeader('All local branches');
         const stacksAsTree = Object.entries(stacks).reduce<Array<TreeItem>>(
             (accumulator, [branch, stackBranches]) => {
                 accumulator.push(

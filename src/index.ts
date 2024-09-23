@@ -11,7 +11,10 @@ program
 
 program
     .command('new')
-    .description('Start a new branch')
+    .summary('Start a new branch')
+    .description(
+        'Tools for creating new branches. It will allow you to create a stacked branch, or create a new branch with a type, ticket reference and description.',
+    )
     .action(async () => {
         const exitCode = await new NewBranchTask(
             new Logger(),
@@ -23,7 +26,10 @@ program
 
 program
     .command('list')
-    .description('List all branches')
+    .summary('List all local branches')
+    .description(
+        'Tool for listing branches. It clearly displays the current branch, and also nests stacks of branches together in a tree.',
+    )
     .action(async () => {
         const exitCode = await new ListBranchesTask(
             new Logger(),
@@ -40,7 +46,8 @@ program
         `Required. Action to perform. Supported are:
 - 'merged' -> Lists and deletes all branches that are already merged into the current branch`,
     )
-    .description('Delete branches')
+    .description('Tools for deleting branches.')
+    .summary('Delete branches')
     .action(async (deleteAction: string) => {
         const logger = new Logger();
 
