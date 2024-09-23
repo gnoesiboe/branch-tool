@@ -71,9 +71,7 @@ export class Logger {
     }
 
     logError(message: string): void {
-        const messageWithPrefix = `! ${message}`;
-
-        const lines = this.wrapMessageInBox(messageWithPrefix);
+        const lines = this.wrapMessageInBox(message, '✗');
 
         lines.forEach((line) => console.error(chalk.red(line)));
     }
@@ -83,18 +81,43 @@ export class Logger {
     }
 
     logSuccess(message: string): void {
-        const lines = this.wrapMessageInBox(`!!! ${message}`);
+        const lines = this.wrapMessageInBox(message, '✓');
 
         lines.forEach((line) => console.log(chalk.green(line)));
     }
 
-    private wrapMessageInBox(message: string): string[] {
+    private wrapMessageInBox(message: string, prefix: string = ''): string[] {
         const boxWidth = message.length + 2;
+        const maxLineWidth = 80;
+        const maxAllowedBoxWith =
+            boxWidth < maxLineWidth ? boxWidth : maxLineWidth;
+
+        const linesOfWords: string[] = [];
+        message.split(' ').forEach((word) => {
+            if (linesOfWords.length === 0) {
+                linesOfWords.push(word);
+
+                return;
+            }
+
+            const lastLine = linesOfWords[linesOfWords.length - 1];
+            const proposedLine = `${lastLine} ${word}`;
+
+            if (proposedLine.length > maxAllowedBoxWith) {
+                linesOfWords.push(word);
+
+                return;
+            }
+
+            linesOfWords[linesOfWords.length - 1] = proposedLine;
+        });
 
         return [
-            '┌' + '─'.repeat(boxWidth) + '┐',
-            '│ ' + message + ' │',
-            '└' + '─'.repeat(boxWidth) + '┘',
+            '┌' + '─'.repeat(maxAllowedBoxWith + 2) + '┐',
+            ...linesOfWords.map((line) => {
+                return '│ ' + line.padEnd(maxAllowedBoxWith, ' ') + ' │';
+            }),
+            '└' + '─'.repeat(maxAllowedBoxWith + 2) + '┘',
         ];
     }
 }
