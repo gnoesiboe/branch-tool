@@ -8,7 +8,7 @@ export class Logger {
     }
 
     logSection(title: string): void {
-        console.log(chalk.blue(`\n\n${title}\n${'-'.repeat(title.length)}\n`));
+        console.log(chalk.blue(`\n\n${title}\n${'─'.repeat(title.length)}\n`));
     }
 
     logHeader(message: string): void {
@@ -73,13 +73,9 @@ export class Logger {
     logError(message: string): void {
         const messageWithPrefix = `! ${message}`;
 
-        console.error(
-            chalk.red('┌' + '─'.repeat(messageWithPrefix.length + 2) + '┐'),
-        );
-        console.error(chalk.red('│ ' + messageWithPrefix + ' │'));
-        console.error(
-            chalk.red('└' + '─'.repeat(messageWithPrefix.length + 2) + '┘'),
-        );
+        const lines = this.wrapMessageInBox(messageWithPrefix);
+
+        lines.forEach((line) => console.error(chalk.red(line)));
     }
 
     logLineBreak(): void {
@@ -87,6 +83,18 @@ export class Logger {
     }
 
     logSuccess(message: string): void {
-        console.log(chalk.green('✅', message));
+        const lines = this.wrapMessageInBox(`!!! ${message}`);
+
+        lines.forEach((line) => console.log(chalk.green(line)));
+    }
+
+    private wrapMessageInBox(message: string): string[] {
+        const boxWidth = message.length + 2;
+
+        return [
+            '┌' + '─'.repeat(boxWidth) + '┐',
+            '│ ' + message + ' │',
+            '└' + '─'.repeat(boxWidth) + '┘',
+        ];
     }
 }
