@@ -39,34 +39,26 @@ program
         process.exit(exitCode);
     });
 
-program
+const deleteCommand = program
     .command('delete')
-    .argument(
-        'deleteAction',
-        `Required. Action to perform. Supported are:
-- 'merged' -> Lists and deletes all branches that are already merged into the current branch`,
-    )
-    .description('Tools for deleting branches.')
     .summary('Delete branches')
+    .description('Tools for deleting branches.');
+
+deleteCommand
+    .command('merged')
+    .summary('Delete branches merged in current')
+    .description(
+        'Tool to delete branches that are already merged in the current branch. It will list the branches to be deleted, and will confirm before deleting. It will not use force delete let GIT do additional checks to see if it is merged.',
+    )
     .action(async (deleteAction: string) => {
         const logger = new Logger();
 
-        switch (deleteAction) {
-            case 'merged':
-                const exitCode = await new DeleteMergedBranchesTask(
-                    logger,
-                    new GitClient(),
-                ).execute();
+        const exitCode = await new DeleteMergedBranchesTask(
+            logger,
+            new GitClient(),
+        ).execute();
 
-                process.exit(exitCode);
-
-            default:
-                logger.logError(
-                    `Unknown delete action: '${deleteAction}'. Supported are: 'merged'`,
-                );
-
-                process.exit(1);
-        }
+        process.exit(exitCode);
     });
 
 program.parse();
