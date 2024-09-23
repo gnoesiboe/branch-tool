@@ -8,7 +8,7 @@ export class Logger {
     }
 
     logSection(title: string): void {
-        console.log(chalk.blue(`\n${title}\n${'-'.repeat(title.length)}\n`));
+        console.log(chalk.blue(`\n\n${title}\n${'-'.repeat(title.length)}\n`));
     }
 
     logHeader(message: string): void {
