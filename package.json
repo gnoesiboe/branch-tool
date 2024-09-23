@@ -10,6 +10,9 @@
     "typescript:validate:watch": "tsc --noEmit -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "branch-tool": "dist/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
