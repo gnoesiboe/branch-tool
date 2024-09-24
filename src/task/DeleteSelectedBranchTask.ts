@@ -84,8 +84,12 @@ export class DeleteSelectedBranchTask implements TaskInterface {
             try {
                 this.gitClient.deleteBranch(branchToDelete, true);
 
+                this.logger.logLineBreak();
+                this.logger.logSuccess(`Branch '${branchToDelete}' deleted`);
+
                 return true;
             } catch (error) {
+                this.logger.logLineBreak();
                 this.logger.logError(
                     `Failed to delete branch '${branchToDelete}'`,
                 );
