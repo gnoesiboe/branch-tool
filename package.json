@@ -1,29 +1,29 @@
 {
-  "name": "branch-tool",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsup src/index.ts",
-    "build:watch": "tsup src/index.ts --watch",
-    "typescript:validate": "tsc --noEmit",
-    "typescript:validate:watch": "tsc --noEmit -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "branch-tool": "dist/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "chalk": "^4.0",
-    "commander": "^12.1.0",
-    "inquirer": "^10.1.8"
-  },
-  "devDependencies": {
-    "@types/node": "^18.14.0",
-    "tsup": "^8.2.4",
-    "typescript": "^5.5.4"
-  }
+    "name": "@gnoesiboe/branch-tool",
+    "version": "0.1.0",
+    "description": "CLI utilities for easy branching using git.",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsup src/index.ts",
+        "build:watch": "tsup src/index.ts --watch",
+        "typescript:validate": "tsc --noEmit",
+        "typescript:validate:watch": "tsc --noEmit -w",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "gbt": "dist/index.js"
+    },
+    "keywords": [],
+    "author": "Gijs Nieuwenhuis <gijsnieuwenhuis@gmail.com>",
+    "license": "CC0-1.0",
+    "dependencies": {
+        "chalk": "^4.0",
+        "commander": "^12.1.0",
+        "inquirer": "^10.1.8"
+    },
+    "devDependencies": {
+        "@types/node": "^18.14.0",
+        "tsup": "^8.2.4",
+        "typescript": "^5.5.4"
+    }
 }
