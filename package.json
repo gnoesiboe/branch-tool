@@ -1,6 +1,6 @@
 {
     "name": "@gnoesiboe/branch-tool",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "CLI utilities for easy branching using git.",
     "main": "index.js",
     "scripts": {
