@@ -15,6 +15,10 @@
     },
     "keywords": [],
     "author": "Gijs Nieuwenhuis <gijsnieuwenhuis@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gnoesiboe/branch-tool"
+    },
     "license": "CC0-1.0",
     "dependencies": {
         "chalk": "^4.0",
