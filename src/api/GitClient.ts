@@ -24,13 +24,16 @@ export class GitClient {
         }
     }
 
-    deleteBranch(branchName: string): void {
-        execSync(`git branch -d ${branchName}`);
+    deleteBranch(branchName: string, force: boolean = false): void {
+        const operator = force ? '-D' : '-d';
+
+        execSync(`git branch ${operator} ${branchName}`);
     }
 
     listBranches(): {
         current: string;
         stacks: Record<string, string[]>;
+        all: string[];
     } {
         const result = execSync('git --no-pager branch').toString();
 
@@ -61,6 +64,7 @@ export class GitClient {
         return {
             current: currentBranch,
             stacks,
+            all: allBranches,
         };
     }
 }

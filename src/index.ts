@@ -6,6 +6,7 @@ import { Logger } from './tools/Logger';
 import { GitClient } from './api/GitClient';
 import { ListBranchesTask } from './task/ListBranchesTask';
 import { DeleteMergedBranchesTask } from './task/DeleteMergedBranchesTask';
+import { DeleteSelectedBranchTask } from './task/DeleteSelectedBranchTask';
 
 program
     .name('branch tool')
@@ -45,6 +46,23 @@ const deleteCommand = program
     .command('delete')
     .summary('Delete branches')
     .description('Tools for deleting branches.');
+
+deleteCommand
+    .command('selected')
+    .summary('Select a branch from the current list, and delete it')
+    .description(
+        'Tool to delete a branch from the current list. It will list the branches, and allow you to select which branch to delete. It will confirm before deleting.',
+    )
+    .action(async (deleteAction: string) => {
+        const logger = new Logger();
+
+        const exitCode = await new DeleteSelectedBranchTask(
+            logger,
+            new GitClient(),
+        ).execute();
+
+        process.exit(exitCode);
+    });
 
 deleteCommand
     .command('merged')
