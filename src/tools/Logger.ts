@@ -39,7 +39,7 @@ export class Logger {
         };
 
         const decorateNodeKey = (key: string): string => {
-            return chalk.dim(key);
+            return chalk.dim(`${key}:`);
         };
 
         const decorateTree = (tree: string): string => {
@@ -63,7 +63,7 @@ export class Logger {
                         parentListCharacter,
                     )} ${decorateNodeKey(
                         key,
-                    )}: ${decorateItemToHighlightCurrentBranch(item)}`,
+                    )} ${decorateItemToHighlightCurrentBranch(item)}`,
                 );
 
                 return;
