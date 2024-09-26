@@ -1,6 +1,9 @@
 import chalk from 'chalk';
+import { BranchTree } from '../api/GitClient';
 
 export type TreeItem = string | number | Array<TreeItem>;
+
+const currentBranchSuffix = '[current]';
 
 export class Logger {
     logDefinition(term: string, definition: string | boolean | number) {
@@ -15,53 +18,109 @@ export class Logger {
         console.log(chalk.cyan(message));
     }
 
-    logTree(
-        items: Array<TreeItem>,
-        level: number = 1,
-        prefix: string = '',
+    logList(items: string[]): void {
+        items.forEach((item) => console.log(`${chalk.gray.dim('-')} ${item}`));
+    }
+
+    logBranchTree(
+        tree: BranchTree,
+        currentBranch: string,
+        parentIndenting: string = '',
     ): void {
-        const indenting = ' '.repeat(level);
+        const entries = Object.entries(tree) as Array<
+            [string, string | Record<string, string | BranchTree>]
+        >;
 
-        const determineCharacter = (
-            index: number,
-            listLength: number,
-            nextIsLastAndArray: boolean,
-        ): string => {
-            if (index === 0) {
-                return listLength === 1 ? '-' : '┌';
-            }
-
-            const isLast = index === listLength - 1;
-            if (isLast || nextIsLastAndArray) {
-                return '└';
-            }
-
-            return '├';
+        const decorateItemToHighlightCurrentBranch = (item: string): string => {
+            return item === currentBranch
+                ? chalk.underline.yellow(item) +
+                      ` ${chalk.yellow(currentBranchSuffix)}`
+                : item;
         };
 
-        items.forEach((item, index) => {
-            const nextIsLastAndArray =
-                index === items.length - 2 && Array.isArray(items[index + 1]);
+        const decorateNodeKey = (key: string): string => {
+            return chalk.dim(key);
+        };
 
-            const isLastItem = index === items.length - 1;
+        const decorateTree = (tree: string): string => {
+            return chalk.dim.gray(tree);
+        };
 
-            if (Array.isArray(item)) {
-                this.logTree(item, level + 1, isLastItem ? '   ' : ' ├ ');
+        entries.forEach(([key, item], indexParent) => {
+            const isLastEntry = indexParent === entries.length - 1;
+
+            const parentListCharacter = (() => {
+                if (isLastEntry) {
+                    return '└';
+                }
+
+                return '├';
+            })();
+
+            if (typeof item === 'string') {
+                console.log(
+                    `${decorateTree(parentIndenting)}${decorateTree(
+                        parentListCharacter,
+                    )} ${decorateNodeKey(
+                        key,
+                    )}: ${decorateItemToHighlightCurrentBranch(item)}`,
+                );
 
                 return;
             }
 
-            console.log(
-                chalk.gray(
-                    prefix +
-                        indenting +
-                        determineCharacter(
-                            index,
-                            items.length,
-                            nextIsLastAndArray,
-                        ),
-                ),
-                item,
+            if (Array.isArray(item)) {
+                console.log(
+                    `${decorateTree(parentIndenting)}${decorateTree(
+                        parentListCharacter,
+                    )} ${decorateNodeKey(key)}`,
+                );
+
+                item.forEach((childItem, indexChild) => {
+                    const childListCharacter = (() => {
+                        if (item.length === 1) {
+                            return '└';
+                        }
+
+                        if (indexChild === item.length - 1) {
+                            return '└';
+                        }
+
+                        return '├';
+                    })();
+
+                    console.log(
+                        `${decorateTree(parentIndenting)}  ${decorateTree(
+                            childListCharacter,
+                        )} ${decorateItemToHighlightCurrentBranch(childItem)}`,
+                    );
+                });
+
+                return;
+            }
+
+            if (item instanceof Object) {
+                console.log(
+                    `${decorateTree(parentIndenting)}${decorateTree(
+                        parentListCharacter,
+                    )} ${decorateNodeKey(key)}`,
+                );
+
+                const parentIndentingForChildren =
+                    parentIndenting + (isLastEntry ? '  ' : '│ ');
+                this.logBranchTree(
+                    item,
+                    currentBranch,
+                    parentIndentingForChildren,
+                );
+
+                return;
+            }
+
+            throw new Error(
+                `Not expecting to get here, with item: '${JSON.stringify(
+                    item,
+                )}'`,
             );
         });
     }

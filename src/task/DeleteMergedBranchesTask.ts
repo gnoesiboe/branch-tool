@@ -22,7 +22,7 @@ export class DeleteMergedBranchesTask implements TaskInterface {
         const branchesMergedInCurrent =
             this.gitClient.listBranchesMergedInCurrent();
 
-        this.logger.logTree(branchesMergedInCurrent);
+        this.logger.logList(branchesMergedInCurrent);
 
         return branchesMergedInCurrent;
     }

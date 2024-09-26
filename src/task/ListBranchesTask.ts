@@ -1,4 +1,4 @@
-import { GitClient } from '../api/GitClient';
+import { BranchTree, GitClient } from '../api/GitClient';
 import { Logger, TreeItem } from '../tools/Logger';
 import { TaskInterface } from './TaskInterface';
 import chalk from 'chalk';
@@ -11,34 +11,10 @@ export class ListBranchesTask implements TaskInterface {
         private readonly gitClient: GitClient,
     ) {}
 
-    private logAllBranches(
-        current: string,
-        stacks: Record<string, string[]>,
-    ): void {
+    private logAllBranches(current: string, tree: BranchTree): void {
         this.logger.logHeader('All local branches');
-        const stacksAsTree = Object.entries(stacks).reduce<Array<TreeItem>>(
-            (accumulator, [branch, stackBranches]) => {
-                accumulator.push(
-                    branch === current
-                        ? chalk.yellow(branch + currentSuffix)
-                        : branch,
-                );
-                if (stackBranches.length > 1) {
-                    accumulator.push(
-                        stackBranches.map((stackBranch) => {
-                            return stackBranch === current
-                                ? chalk.yellow(stackBranch + currentSuffix)
-                                : stackBranch;
-                        }),
-                    );
-                }
 
-                return accumulator;
-            },
-            [],
-        );
-
-        this.logger.logTree(stacksAsTree);
+        this.logger.logBranchTree(tree, current);
     }
 
     private logCurrent(current: string): void {
@@ -49,11 +25,11 @@ export class ListBranchesTask implements TaskInterface {
     async execute(): Promise<number> {
         this.logger.logSection('Listing all branches');
 
-        const { current, stacks } = this.gitClient.listBranches();
+        const { current, tree } = this.gitClient.listBranches();
 
         this.logCurrent(current);
         this.logger.logLineBreak();
-        this.logAllBranches(current, stacks);
+        this.logAllBranches(current, tree);
 
         return 0;
     }

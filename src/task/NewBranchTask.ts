@@ -11,6 +11,8 @@ type ChangType =
     | 'documentation'
     | 'test';
 
+export const branchSeparator = '/';
+
 export class NewBranchTask implements TaskInterface {
     constructor(
         private readonly logger: Logger,
@@ -82,9 +84,9 @@ export class NewBranchTask implements TaskInterface {
             answers.description.toLowerCase(),
         ]
             .map((value) => this.transformStringToBranchNamePart(value))
-            .join('_');
+            .join(branchSeparator);
 
-        return `${firstPart}/${secondPart}`;
+        return [firstPart, secondPart].join(branchSeparator);
     }
 
     private async determineNewStackedBranchName(
@@ -145,6 +147,7 @@ export class NewBranchTask implements TaskInterface {
 
         this.gitClient.branchOff(newBranchName);
 
+        this.logger.logLineBreak();
         this.logger.logSuccess(`Branch '${newBranchName}' created`);
     }
 
