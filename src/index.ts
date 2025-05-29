@@ -7,6 +7,7 @@ import { GitClient } from './api/GitClient';
 import { ListBranchesTask } from './task/ListBranchesTask';
 import { DeleteMergedBranchesTask } from './task/DeleteMergedBranchesTask';
 import { DeleteSelectedBranchTask } from './task/DeleteSelectedBranchTask';
+import { RebaseTask } from './task/rebaseTask';
 
 program
     .name('branch tool')
@@ -35,6 +36,18 @@ program
     )
     .action(async () => {
         const exitCode = await new ListBranchesTask(
+            new Logger(),
+            new GitClient(),
+        ).execute();
+
+        process.exit(exitCode);
+    });
+
+program
+    .command('rebase')
+    .summary('Rebase current branch onto another branch')
+    .action(async () => {
+        const exitCode = await new RebaseTask(
             new Logger(),
             new GitClient(),
         ).execute();

@@ -9,12 +9,39 @@ export interface BranchTree {
 }
 
 export class GitClient {
+    pullLatestChangesFromOrigin() {
+        const currentBranch = this.resolveCurrentBranch();
+
+        execSync(`git pull --rebase origin ${currentBranch}`);
+    }
+
+    rebaseCurrentBranchOnTopOf(branchName: string) {
+        execSync(`git pull --rebase origin ${branchName}`);
+    }
+
+    stashOpenChanges(): void {
+        execSync(`git stash push -u`);
+    }
+
+    popStashedChanges(): void {
+        execSync(`git stash pop`);
+    }
+
     resolveCurrentBranch(): string {
         return execSync('git branch --show-current').toString();
     }
 
     branchOff(newBranchName: string): void {
         execSync(`git checkout -b ${newBranchName}`);
+    }
+
+    getOpenChangedAndStagedFileNames(): string[] {
+        const result = execSync('git status --porcelain').toString();
+
+        return result
+            .split('\n')
+            .filter((line) => line.length > 0)
+            .map((line) => line.substring(3).trim());
     }
 
     listBranchesMergedInCurrent(): string[] {
